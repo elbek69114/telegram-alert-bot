@@ -1,12 +1,11 @@
-const url = Deno.env.get("API_URL");
-const key = Deno.env.get("API_KEY");
+const TELEGRAM_API_URL = Deno.env.get("TELEGRAM_API_URL");
+const TELEGRAM_API_KEY = Deno.env.get("TELEGRAM_API_KEY");
+const URI = `${TELEGRAM_API_URL}/${TELEGRAM_API_KEY}/sendMessage`
 
 export async function sendMessage(message) {
     
   try {
-    const fullUrl = `${url}/${key}/sendMessage`
-    console.log(fullUrl)
-    const response = await fetch(fullUrl, {
+    const response = await fetch(URI, {
       method: "POST",
       body: JSON.stringify(message),
       headers: { "Content-Type": "application/json" },
