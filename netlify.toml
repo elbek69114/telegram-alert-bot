@@ -1,3 +1,7 @@
 [[edge_functions]]
-  path = "/*"
-  function = "index"
+  function = "home"
+  path = "/"
+
+[[edge_functions]]
+  function = "alert"
+  path = "/alert"

@@ -1,5 +1,5 @@
 export const config = {
-    runtime: "edge",
+    runtime: "edge"
 };
 
 import { sendMessage } from "../../utils/sender.js";

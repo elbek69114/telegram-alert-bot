@@ -1,7 +1,7 @@
 import { sendMessage } from "../../utils/sender.js";
 
 export const config = {
-  runtime: "edge",
+  runtime: "edge"
 };
 
 function badRequest(message) {
