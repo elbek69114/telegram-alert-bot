@@ -29,3 +29,15 @@ export function getResponse(status, message) {
         },
     });
 }
+
+export function getUsers(subject) {
+    const usersKey = "SUBJECT_" + subject.replace(/-/g, "_").toUpperCase();
+    return JSON.parse(Deno.env.get(usersKey) || "[]");
+}
+
+export function getSubjectTag(subject) {
+  return subject
+    .split('-') // Split by hyphens
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase rest
+    .join(''); // Join without separators
+}

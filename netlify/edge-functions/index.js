@@ -2,10 +2,9 @@ export const config = {
   runtime: "edge",
 };
 
-import { sendMessage, getResponse } from "../../utils/sender.js";
+import { getResponse, sendMessage } from "../../utils/sender.js";
 
 const TELEGRAM_SECRET_TOKEN = Deno.env.get("TELEGRAM_SECRET_TOKEN");
-
 
 export default async function handler(req) {
   const body = await req.json().catch(() => ({}));
