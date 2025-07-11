@@ -60,8 +60,7 @@ function sendToUsers(subject, message) {
     const promises = users.map((user) => {
         return sendMessage({
             chat_id: user,
-            text: `#${subject}\n ${message}`,
-            parse_mode: "MarkdownV2",
+            text: `#${subject}\n ${message}`
         });
     });
 
