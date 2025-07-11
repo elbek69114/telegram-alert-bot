@@ -5,9 +5,7 @@ export const config = {
 import { sendMessage } from "../../utils/sender.js";
 
 const PRODUCER_SECRET_TOKEN = Deno.env.get("PRODUCER_SECRET_TOKEN");
-const SUBJECT_USER_MANAGEMENT = JSON.parse(
-    Deno.env.get("SUBJECT_USER_MANAGEMENT") || "[]",
-);
+
 
 function erroResponse(status, error) {
     return new Response(JSON.stringify({ error }), {
@@ -53,7 +51,11 @@ export default async function handler(req) {
 function sendToUsers(subject, message) {
     let users = [];
     if (subject === "UserManagement") {
-        users = SUBJECT_USER_MANAGEMENT;
+        users = JSON.parse(Deno.env.get("SUBJECT_USER_MANAGEMENT") || "[]");;
+    } else if (subject === "LoyaltyManagement") {
+        users = JSON.parse(Deno.env.get("SUBJECT_LOYALTY_MANAGEMENT") || "[]");
+    } else {
+        return Promise.reject(new Error("Unknown subject"));
     }
 
     
