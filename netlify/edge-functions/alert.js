@@ -36,26 +36,26 @@ export default async function handler(req) {
         console.error("No message provided in the request body");
         return getResponse(400, "No message provided");
     }
-    let subjectEnvKey = getEnvironmentKey(body.subject);
-    let users = JSON.parse(Deno.env.get("SUBJECT_" + subjectEnvKey) || "[]");
+    let usersKey = "SUBJECT_" + getEnvironmentKey(body.subject);
+    let users = JSON.parse(Deno.env.get(usersKey) || "[]");
     if (!users || users.length === 0 || !Array.isArray(users)) {
-        console.error("No users found for the subject:", subjectEnvKey);
-        return getResponse(404, "No users found for the subject");
+        console.error("No users found for the key:", usersKey);
+        return getResponse(404, "No users found for the subject:" + body.subject);
     }
 
-    let subjectPascalCase = kebabToPascalCase(body.subject);
-    sendToUsers(users, subjectPascalCase, body.message)
+    let subjectTag = kebabToPascalCase(body.subject);
+    sendToUsers(users, subjectTag, body.message)
         .then((result) => console.log("result:", result))
         .catch((err) => console.error(err));
 
     return getResponse(200, "Message received and will be sent to users: " + users.join(", "));
 }
 
-function sendToUsers(users, subjectPascalCase, message) {
+function sendToUsers(users, subjectTag, message) {
     const promises = users.map((user) => {
         return sendMessage({
             chat_id: user,
-            text: `#${subjectPascalCase}\n ${message}`,
+            text: `#${subjectTag}\n ${message}`,
         });
     });
 
