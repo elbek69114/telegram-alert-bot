@@ -4,4 +4,4 @@
 
 [[edge_functions]]
   function = "home"
-  path = "/*"
+  path = "/"
