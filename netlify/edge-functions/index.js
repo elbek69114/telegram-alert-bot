@@ -26,13 +26,13 @@ export default async function handler(req) {
   const body = await req.json().catch(() => ({}));
   console.log("Method:", req.method, "URL:", req.url, "body:", body);
   if (!body) {
-    return badRequest(400, "No body provided");
+    return erroResponse(400, "No body provided");
   }
   if (!body.message) {
-    return badRequest(400, "No message provided");
+    return erroResponse(400, "No message provided");
   }
   if (!body.message.chat) {
-    return badRequest(400, "No chat provided");
+    return erroResponse(400, "No chat provided");
   }
 
   let text = body.message.text || "";
