@@ -19,3 +19,13 @@ export async function sendMessage(message) {
     throw new Error(`HTTP request failed: ${error.message}`);
   }
 }
+
+
+export function getResponse(status, message) {
+    return new Response(JSON.stringify({ message }), {
+        status,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
