@@ -46,7 +46,7 @@ export default async function handler(req) {
     text = `You said: ${text}`;
   }
   
-  sendMessage({ chat_id: body.message.chat.id, text: body.message.text })
+  sendMessage({ chat_id: body.message.chat.id, text: text })
     .then((result) => console.log("result:", result))
     .catch((err) => console.error(err));
 
