@@ -4,9 +4,9 @@ export const config = {
   runtime: "edge"
 };
 
-function badRequest(message) {
-    return new Response(JSON.stringify({ error: message }), {
-        status: 400,
+function erroResponse(status, error) {
+    return new Response(JSON.stringify({ error }), {
+        status,
         headers: {
             "Content-Type": "application/json",
         },
@@ -26,13 +26,13 @@ export default async function handler(req) {
   const body = await req.json().catch(() => ({}));
   console.log("Method:", req.method, "URL:", req.url, "body:", body);
   if (!body) {
-    return badRequest("No body provided");
+    return badRequest(400, "No body provided");
   }
   if (!body.message) {
-    return badRequest;
+    return badRequest(400, "No message provided");
   }
   if (!body.message.chat) {
-    return badRequest;
+    return badRequest(400, "No chat provided");
   }
 
   let text = body.message.text || "";
