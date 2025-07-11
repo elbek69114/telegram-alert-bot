@@ -1,30 +1,37 @@
 import { sendMessage } from "../../utils/sender.js";
 
 export const config = {
-  runtime: "edge"
+  runtime: "edge",
 };
 
+const TELEGRAM_SECRET_TOKEN = Deno.env.get("TELEGRAM_SECRET_TOKEN");
+
 function erroResponse(status, error) {
-    return new Response(JSON.stringify({ error }), {
-        status,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+  return new Response(JSON.stringify({ error }), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 function successResponse(message) {
-    return new Response(JSON.stringify({ message }), {
-        status: 200,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+  return new Response(JSON.stringify({ message }), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 export default async function handler(req) {
   const body = await req.json().catch(() => ({}));
   console.log("Method:", req.method, "URL:", req.url, "body:", body);
+  if (
+    req.headers.get("X-Telegram-Bot-Api-Secret-Token") !== TELEGRAM_SECRET_TOKEN
+  ) {
+    return erroResponse(401, "Unauthorized: Invalid API Key");
+  }
   if (!body) {
     return erroResponse(400, "No body provided");
   }
@@ -41,11 +48,12 @@ export default async function handler(req) {
   } else if (text === "/start") {
     text = `Welcome! Your chat ID is: ${body.message.chat.id}`;
   } else if (text === "/help") {
-    text = "Available commands:\n/chatid - Get your chat ID\n/start - Start the bot\n/help - Show this help message";
+    text =
+      "Available commands:\n/chatid - Get your chat ID\n/start - Start the bot\n/help - Show this help message";
   } else {
     text = `You said: ${text}`;
   }
-  
+
   sendMessage({ chat_id: body.message.chat.id, text: text })
     .then((result) => console.log("result:", result))
     .catch((err) => console.error(err));

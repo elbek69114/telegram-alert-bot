@@ -4,7 +4,7 @@ export const config = {
 
 import { sendMessage } from "../../utils/sender.js";
 
-const PRODUCER_API_KEY = Deno.env.get("PRODUCER_API_KEY");
+const PRODUCER_SECRET_TOKEN = Deno.env.get("PRODUCER_SECRET_TOKEN");
 const SUBJECT_USER_MANAGEMENT = JSON.parse(
     Deno.env.get("SUBJECT_USER_MANAGEMENT") || "[]",
 );
@@ -30,7 +30,7 @@ function successResponse(message) {
 export default async function handler(req) {
     const body = await req.json().catch(() => ({}));
     console.log("Method:", req.method, "URL:", req.url, "body:", body);
-    if (req.headers.get("X-Api-Key") !== PRODUCER_API_KEY) {
+    if (req.headers.get("X-Producer-Secret-Token") !== PRODUCER_SECRET_TOKEN) {
         return erroResponse(401, "Unauthorized: Invalid API Key");
     }
     if (!body) {
