@@ -52,7 +52,7 @@ export default async function handler(req) {
 
 function sendToUsers(subject, message) {
     let users = [];
-    if (subject === "user-management") {
+    if (subject === "UserManagement") {
         users = SUBJECT_USER_MANAGEMENT;
     }
 
@@ -60,7 +60,8 @@ function sendToUsers(subject, message) {
     const promises = users.map((user) => {
         return sendMessage({
             chat_id: user,
-            text: message,
+            text: `#${subject}\n ${message}`,
+            parse_mode: "MarkdownV2",
         });
     });
 
