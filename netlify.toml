@@ -1,3 +1,10 @@
+[edge_functions]
+  included_files = ["netlify/edge-functions/**"]
+
 [[edge_functions]]
   path = "/*"
   function = "index"
+
+[[edge_functions]]
+  path = "/alert"
+  function = "alert"  

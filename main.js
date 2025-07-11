@@ -1,3 +1,3 @@
-import handler from "./netlify/edge-functions/alert.js";
+import handler from "./netlify/edge-functions/index.js";
 
 Deno.serve({}, handler)
