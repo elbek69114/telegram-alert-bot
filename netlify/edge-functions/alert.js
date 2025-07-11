@@ -6,7 +6,7 @@ import { sendMessage, getResponse } from "../../utils/sender.js";
 
 const PRODUCER_SECRET_TOKEN = Deno.env.get("PRODUCER_SECRET_TOKEN");
 
-function kebabToUpperCaseWithUnderscore(kebabCase){
+function getEnvironmentKey(kebabCase){
     return kebabCase.replace(/-/g, "_").toUpperCase();
 }
 
@@ -36,14 +36,14 @@ export default async function handler(req) {
         console.error("No message provided in the request body");
         return getResponse(400, "No message provided");
     }
-    
-    let subjectPascalCase = kebabToPascalCase(body.subject);
-    let users = JSON.parse(Deno.env.get(subjectPascalCase) || "[]");
+    let subjectEnvKey = getEnvironmentKey(body.subject);
+    let users = JSON.parse(Deno.env.get("SUBJECT_" + subjectEnvKey) || "[]");
     if (!users || users.length === 0 || !Array.isArray(users)) {
-        console.error("No users found for the subject:", subjectPascalCase);
+        console.error("No users found for the subject:", subjectEnvKey);
         return getResponse(404, "No users found for the subject");
     }
-    
+
+    let subjectPascalCase = kebabToPascalCase(body.subject);
     sendToUsers(users, subjectPascalCase, body.message)
         .then((result) => console.log("result:", result))
         .catch((err) => console.error(err));
