@@ -13,12 +13,10 @@ const PRODUCER_SECRET_TOKEN = Deno.env.get("PRODUCER_SECRET_TOKEN");
 
 export default async function handler(req) {
     const body = await req.json().catch(() => ({}));
-    if (req.headers.get("X-Producer-Secret-Token") !== PRODUCER_SECRET_TOKEN) {
-        console.error(
-            "Unauthorized access attempt with invalid API key:",
-            req.headers.get("X-Producer-Secret-Token"),
-        );
-        return getResponse(401, "Unauthorized: Invalid API Key");
+    const apiKey = req.headers.get("X-Producer-Secret-Token");
+    if (apiKey !== PRODUCER_SECRET_TOKEN) {
+        console.error("Unauthorized: invalid API key:", apiKey);
+        return getResponse(401, "Invalid API Key");
     }
     if (!body) {
         console.error("No body provided in the request bod:", body);
@@ -46,13 +44,8 @@ export default async function handler(req) {
         .then((result) => console.log("result:", result))
         .catch((err) => console.error(err));
 
-    console.log(
-        `Users: ${users}, Subject: ${body.subject}, Message: ${body.message}`,
-    );
-    return getResponse(
-        200,
-        "Message received and will be sent to users: " + users,
-    );
+    console.log("Users:", users, body.subject, body.message);
+    return getResponse(200, "Message will be sent to users: " + users);
 }
 
 function sendToUsers(users, subject, message) {
