@@ -29,15 +29,19 @@ export default async function handler(req) {
     const body = await req.json().catch(() => ({}));
     console.log("Method:", req.method, "URL:", req.url, "body:", body);
     if (req.headers.get("X-Producer-Secret-Token") !== PRODUCER_SECRET_TOKEN) {
+        console.error("Unauthorized access attempt with invalid API key");
         return erroResponse(401, "Unauthorized: Invalid API Key");
     }
     if (!body) {
+        console.error("No body provided in the request");
         return erroResponse(400, "No body provided");
     }
     if (!body.subject) {
+        console.error("No subject provided in the request body");
         return erroResponse(400, "No subject provided");
     }
     if (!body.message) {
+        console.error("No message provided in the request body");
         return erroResponse(400, "No message provided");
     }
     sendToUsers(body.subject, body.message)

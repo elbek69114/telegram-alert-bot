@@ -30,15 +30,19 @@ export default async function handler(req) {
   if (
     req.headers.get("X-Telegram-Bot-Api-Secret-Token") !== TELEGRAM_SECRET_TOKEN
   ) {
+    console.error("Unauthorized access attempt with invalid API key");
     return erroResponse(401, "Unauthorized: Invalid API Key");
   }
   if (!body) {
+    console.error("No body provided in the request");
     return erroResponse(400, "No body provided");
   }
   if (!body.message) {
+    console.error("No message provided in the request body");
     return erroResponse(400, "No message provided");
   }
   if (!body.message.chat) {
+    console.error("No chat provided in the request body");
     return erroResponse(400, "No chat provided");
   }
 
