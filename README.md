@@ -1,11 +1,12 @@
 # Telegram Alert Bot
 
-This project is a Telegram Bot API that sends alert notifications to its users. It is designed to receive alert messages from a REST client and forward them to subscribed Telegram users.
+This project is a Telegram Bot API that sends alert notifications to its users.
+It is designed to receive alert messages from a REST client and forward them to subscribed Telegram users.
 
 ## Features
 
 - Receives alert notifications from a REST client.
-- Forwards alerts to registered Telegram users.
+- Forwards alerts to registered Telegram users based on alert subject.
 - Simple and easy to integrate with monitoring or alerting systems.
 
 ## Usage
@@ -18,6 +19,11 @@ This project is a Telegram Bot API that sends alert notifications to its users. 
 
 2. **Configure the bot:**
     - Set your Telegram Bot Token and other configuration in the environment or config file.
+    - For subject-based subscriptions, set environment variables like:
+      ```
+      SUBJECT_USER_SERVICE=[subscriber-chat-id]
+      ```
+      This will send alerts with `subject: user-service` to the specified chat ID.
 
 3. **Run the bot:**
     ```bash
@@ -30,8 +36,8 @@ This project is a Telegram Bot API that sends alert notifications to its users. 
 ## API
 
 - **POST /alert**
-  - **Body:** `{ "message": "Your alert message" }`
-  - **Description:** Sends an alert to all registered users.
+  - **Body:** `{ "subject": "user-service", "message": "NotFoundException: user not found by login: xyz" }`
+  - **Description:** Sends an alert to all registered users subscribed to the given subject.
 
 ## License
 
