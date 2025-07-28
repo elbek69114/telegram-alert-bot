@@ -5,9 +5,10 @@ It is designed to receive alert messages from a REST client and forward them to 
 
 ## Features
 
-- Receives alert notifications from a REST client.
-- Forwards alerts to registered Telegram users based on alert subject.
-- Simple and easy to integrate with monitoring or alerting systems.
+- Receives alert notifications via a REST API.
+- Forwards alerts to Telegram users based on the alert subject.
+- Easy integration with monitoring or alerting systems.
+- Uses environment variables for subject-based subscriptions.
 
 ## Usage
 
@@ -19,11 +20,11 @@ It is designed to receive alert messages from a REST client and forward them to 
 
 2. **Configure the bot:**
     - Set your Telegram Bot Token and other configuration in the environment or config file.
-    - For subject-based subscriptions, set environment variables like:
+    - Set environment variables in the following format:
       ```
-      SUBJECT_USER_SERVICE=[subscriber-chat-id]
+      CONSUMER_CHAT_ID=-100123456789
       ```
-      This will send alerts with `subject: user-service` to the specified chat ID.
+      You can add dynamic chant by using request body: `chatId: your spesific chantId`
 
 3. **Run the bot:**
     ```bash
@@ -32,11 +33,27 @@ It is designed to receive alert messages from a REST client and forward them to 
 
 4. **Send alerts:**
     - Use your REST client to POST alert messages to the bot's API endpoint.
+    - Example request:
+      ```http
+      POST /alert
+      Content-Type: application/json
+
+      {
+        "subject": "user-service",
+        "message": "NotFoundException: user not found by login: xyz"
+      }
+      ```
 
 ## API
 
 - **POST /alert**
-  - **Body:** `{ "subject": "user-service", "message": "NotFoundException: user not found by login: xyz" }`
+  - **Body:**  
+    ```json
+    {
+      "subject": "user-service",
+      "message": "NotFoundException: user not found by login: xyz"
+    }
+    ```
   - **Description:** Sends an alert to all registered users subscribed to the given subject.
 
 ## License
