@@ -7,11 +7,9 @@ import { getResponse, sendMessage } from "../../utils/sender.js";
 const TELEGRAM_SECRET_TOKEN = Deno.env.get("TELEGRAM_SECRET_TOKEN");
 
 export default async function handler(req) {
-  const body = await req.json().catch(() => ({}));
-  console.log("Method:", req.method, "URL:", req.url, "body:", body);
-  if (
-    req.headers.get("X-Telegram-Bot-Api-Secret-Token") !== TELEGRAM_SECRET_TOKEN
-  ) {
+  const body = await req.json().catch(() => ({}));  
+  const secretToken = req.headers.get("X-Telegram-Bot-Api-Secret-Token")
+  if (secretToken !== TELEGRAM_SECRET_TOKEN) {
     console.error("Unauthorized access attempt with invalid API key");
     return getResponse(401, "Unauthorized: Invalid API Key");
   }
@@ -36,12 +34,10 @@ export default async function handler(req) {
   } else if (text === "/help") {
     text =
       "Available commands:\n/chatid - Get your chat ID\n/start - Start the bot\n/help - Show this help message";
-  } else {
-    text = `You said: ${text}`;
   }
 
   sendMessage({ chat_id: body.message.chat.id, text: text })
-    .then((result) => console.log("result:", result))
+    .then((result) => console.log("Bot message sent successfully:", result.ok))
     .catch((err) => console.error(err));
 
   return getResponse(200, text);

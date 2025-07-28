@@ -10,11 +10,8 @@ export async function sendMessage(message) {
       body: JSON.stringify(message),
       headers: { "Content-Type": "application/json" },
     });
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return await response.json();
-    }
-    return await response.text();
+    
+    return await response.json();
   } catch (error) {
     throw new Error(`HTTP request failed: ${error.message}`);
   }
