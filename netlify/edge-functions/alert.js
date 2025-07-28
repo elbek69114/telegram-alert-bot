@@ -35,7 +35,7 @@ export default async function handler(req) {
     const chat_id = body.chatId || CONSUMER_CHAT_ID;
 
     sendToChat(chat_id, body.subject, body.message)
-        .then((result) => console.log("result:", result))
+        .then((result) => console.log("seneded message ok:", result.ok))
         .catch((err) => console.error(err));
 
     console.log("chat:", chat_id, body.subject);
