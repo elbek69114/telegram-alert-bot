@@ -5,15 +5,16 @@ export const config = {
 import {
     getResponse,
     getSubjectTag,
-    getUsers,
     sendMessage,
 } from "../../utils/sender.js";
 
 const PRODUCER_SECRET_TOKEN = Deno.env.get("PRODUCER_SECRET_TOKEN");
+const CONSUMER_CHAT_ID = Deno.env.get("CONSUMER_CHAT_ID");
 
 export default async function handler(req) {
     const body = await req.json().catch(() => ({}));
     const apiKey = req.headers.get("X-Producer-Secret-Token");
+
     if (apiKey !== PRODUCER_SECRET_TOKEN) {
         console.error("Unauthorized: invalid API key:", apiKey);
         return getResponse(401, "Invalid API Key");
@@ -31,31 +32,18 @@ export default async function handler(req) {
         return getResponse(400, "No message provided");
     }
 
-    let users = getUsers(body.subject);
-    if (!users || users.length === 0 || !Array.isArray(users)) {
-        console.error(`No users found for the subject: ${body.subject}`);
-        return getResponse(
-            404,
-            `No users found for the subject: ${body.subject}`,
-        );
-    }
+    const chat_id = body.chatId || CONSUMER_CHAT_ID;
 
-    sendToUsers(users, body.subject, body.message)
+    sendToChat(chat_id, body.subject, body.message)
         .then((result) => console.log("result:", result))
         .catch((err) => console.error(err));
 
-    console.log("Users:", users, body.subject, body.message);
-    return getResponse(200, "Message will be sent to users: " + users);
+    console.log("chat:", chat_id, body.subject);
+    return getResponse(200, "Message will be sent to chat: " + chat_id);
 }
 
-function sendToUsers(users, subject, message) {
-    let subjectTag = getSubjectTag(subject);
-    const promises = users.map((user) => {
-        return sendMessage({
-            chat_id: user,
-            text: `#${subjectTag}\n${message}`,
-        });
-    });
-
-    return Promise.all(promises);
+function sendToChat(chat_id, subject, message) {
+    const subjectTag = getSubjectTag(subject);
+    const text = `#${subjectTag}\n${message}`;
+    return sendMessage({ chat_id, text });
 }

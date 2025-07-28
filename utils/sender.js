@@ -30,11 +30,6 @@ export function getResponse(status, message) {
     });
 }
 
-export function getUsers(subject) {
-    const usersKey = "SUBJECT_" + subject.replace(/-/g, "_").toUpperCase();
-    return JSON.parse(Deno.env.get(usersKey) || "[]");
-}
-
 export function getSubjectTag(subject) {
   return subject
     .split('-') // Split by hyphens
