@@ -19,11 +19,11 @@ export default async function handler(req) {
   }
   if (!body.message) {
     console.error("No message provided in the request body:", body);
-    return getResponse(400, "No message provided");
+    return getResponse(200, "No message provided");
   }
   if (!body.message.chat) {
     console.error("No chat provided in the request message:", body.message);
-    return getResponse(400, "No chat provided");
+    return getResponse(200, "No chat provided");
   }
 
   let text = body.message.text || "";
