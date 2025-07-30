@@ -32,18 +32,25 @@ export default async function handler(req) {
         return getResponse(400, "No message provided");
     }
 
-    const chat_id = body.chatId || CONSUMER_CHAT_ID;
+    let chats;
+    if(body.chats && Array.isArray(body.chats)) {
+        chats = body.chats;
+    } else if (body.chatId) {
+        chats = [body.chatId];
+    } else {
+        chats = [CONSUMER_CHAT_ID];
+    }
 
-    sendToChat(chat_id, body.subject, body.message)
-        .then((result) => console.log("Alert message sent successfully:", result.ok))
+    sendToChat(chats, body.subject, body.message)
+        .then((results) => console.log("Alert message sent successfully:", results.map(r => r.ok)))
         .catch((err) => console.error(err));
 
-    console.log("chat:", chat_id, body.subject);
-    return getResponse(200, "Message will be sent to chat: " + chat_id);
+    console.log("chats:", chats, body.subject);
+    return getResponse(200, "Message will be sent to chats: " + chats);
 }
 
-function sendToChat(chat_id, subject, message) {
+function sendToChat(chats, subject, message) {
     const subjectTag = getSubjectTag(subject);
     const text = `#${subjectTag}\n${message}`;
-    return sendMessage({ chat_id, text });
+    return Promise.all(chats.map(chat_id => sendMessage({ chat_id, text })));
 }
