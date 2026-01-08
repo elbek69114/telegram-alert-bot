@@ -34,6 +34,9 @@ export default async function handler(req) {
   } else if (text === "/help") {
     text =
       "Available commands:\n/chatid - Get your chat ID\n/start - Start the bot\n/help - Show this help message";
+  } else {
+    console.log("Received unsupported message:", text);
+    return getResponse(200, "Unsupported command");
   }
 
   sendMessage({ chat_id: body.message.chat.id, text: text })
